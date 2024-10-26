@@ -44,8 +44,8 @@ try:
             print(f"Se detecta una papa mala {defect_label}, enviado a la caja de papas/tomates con defectos...")
         if "TomatesMalos" in defect_label:
             print(f"Se detecta un tomate malo {defect_label}, enviado a la caja de papas/tomates con defectos...")
-
     else:
+
         # Si no hay defectos, aplicar el modelo de color/objeto
         color_index, color_confidence = classify_imagePredictor(color_interpreter, color_input_details, color_output_details, image)
         color_label = color_labels[color_index]
@@ -65,7 +65,9 @@ try:
         elif "TomatesAmarillos" in color_label:
             print(f"Se detecta un tomate amarillo ({color_label}), se envía a Granel.")
         elif "Papas" in color_label:
-            print(f"Se detecta una papa sana({color_label}).")
+            print(f"Se detecta una papa sana({color_label}), se procederá a analizar su tamaño.")
+            #Procesa con el modelo de tamaño aqui: 
+            #--><--
 
 except FileNotFoundError:
     print("El archivo de imagen no se encontró. Verifica la ruta.")
