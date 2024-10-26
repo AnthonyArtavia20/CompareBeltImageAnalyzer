@@ -1,0 +1,32 @@
+# Ignorar archivos y carpetas generados automáticamente
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignorar archivos de configuración y entornos virtuales
+*.env
+.env/
+venv/
+.venv/
+
+# Ignorar archivos de registro y temporales
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Ignorar archivos de caché y metadatos de la biblioteca
+.cache/
+*.sqlite3
+
+# Ignorar archivos de configuración de VSCode
+.vscode/
+
+# Ignorar archivos de imágenes temporales generadas
+*.jpg
+*.jpeg
+*.png
+
+# Ignorar carpetas y archivos de pruebas
+Client/test/captured_image.jpg

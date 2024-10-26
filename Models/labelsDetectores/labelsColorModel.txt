@@ -1,0 +1,4 @@
+0 TomatesRojos(Maduros)
+1 TomatesVerdes
+2 TomatesAmarillos
+3 Papas

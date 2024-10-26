@@ -1,0 +1,4 @@
+0 PapasBuenas
+1 PapasMalas
+2 TomatesBuenos
+3 TomatesMalos
