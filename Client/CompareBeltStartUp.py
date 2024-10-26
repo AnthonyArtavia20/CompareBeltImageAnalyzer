@@ -15,6 +15,7 @@ from Entities.RutasConfiguracion import (
 from Entities.CargaModelos import cargar_etiquetas, cargar_modelo
 from functionAnalysis.CapturaImagen import capture_image
 from DataManager.clasificadorPrediccion import classify_imagePredictor
+from Models.ModelosDetectores.tamaño import AnalizadorTamano
 from PIL import Image
 
 # Capturar imagen
@@ -57,8 +58,14 @@ try:
             print(f"Se detecta un tomate maduro ({color_label}), se procesará por tamaño...")
             
 
-            #Procesa con el modelo de tamaño aqui: 
-            #--><--
+            # Crear instancia de AnalizadorTamano y procesar la imagen
+            analizador = AnalizadorTamano(image)
+            clasificacion_tamaño, diametro_cm = analizador.analizar()
+
+            if diametro_cm is not None:
+                print(f"El diámetro detectado es: {diametro_cm:.2f} cm, Clasificación: {clasificacion_tamaño}")
+            else:
+                print("No se pudo detectar el contorno para analizar el tamaño.")
 
         elif "TomatesVerdes" in color_label:
             print(f"Se detecta un tomate verde ({color_label}), se envía a Granel.")
@@ -66,8 +73,15 @@ try:
             print(f"Se detecta un tomate amarillo ({color_label}), se envía a Granel.")
         elif "Papas" in color_label:
             print(f"Se detecta una papa sana({color_label}), se procederá a analizar su tamaño.")
-            #Procesa con el modelo de tamaño aqui: 
-            #--><--
+            
+            # Crear instancia de AnalizadorTamano y procesar la imagen
+            analizador = AnalizadorTamano(image)
+            clasificacion_tamaño, diametro_cm = analizador.analizar()
+
+            if diametro_cm is not None:
+                print(f"El diámetro detectado es: {diametro_cm:.2f} cm, Clasificación: {clasificacion_tamaño}")
+            else:
+                print("No se pudo detectar el contorno para analizar el tamaño.")
 
 except FileNotFoundError:
     print("El archivo de imagen no se encontró. Verifica la ruta.")
