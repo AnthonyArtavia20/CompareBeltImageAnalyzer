@@ -6,7 +6,7 @@ def capture_image(save_path):
         print("Error al abrir la cámara.")
         return
 
-    print("Presiona 's' para capturar la imagen o 'q' para salir.")
+    print("Presiona 'espacio' para capturar la imagen o 'q' para salir.")
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -15,9 +15,9 @@ def capture_image(save_path):
 
         cv2.imshow("Capturando imagen", frame)
 
-        # Presiona 's' para guardar la imagen, 'q' para salir
+        # Presiona 'espacio' para guardar la imagen, 'q' para salir
         key = cv2.waitKey(1)
-        if key == ord('s'):
+        if key == 32:  # Código ASCII de la barra espaciadora
             cv2.imwrite(save_path, frame)
             print(f"Imagen guardada en {save_path}")
             break

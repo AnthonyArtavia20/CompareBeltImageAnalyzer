@@ -50,27 +50,28 @@ try:
         # Si no hay defectos, aplicar el modelo de color/objeto
         color_index, color_confidence = classify_imagePredictor(color_interpreter, color_input_details, color_output_details, image)
         color_label = color_labels[color_index]
-        print(f"El objeto detectado es: {color_label}, no tiene defectos. Confidence: {color_confidence}")
-        print("Se procede a clasificar el objeto sano...")
+        print(f"Se ha detectado un objeto sano, Confidence: {color_confidence}")
+        print("Se procede a clasificar el objeto...")
 
         # Clasificación según el color
         if "TomatesRojos(Maduros)" in color_label:
             print(f"Se detecta un tomate maduro ({color_label}), se procesará por tamaño...")
-            
 
-            # Crear instancia de AnalizadorTamano y procesar la imagen
+            # Crear instancia de AnalizadorTamaño y procesar la imagen
             analizador = AnalizadorTamano(image)
             clasificacion_tamaño, diametro_cm = analizador.analizar()
 
             if diametro_cm is not None:
                 print(f"El diámetro detectado es: {diametro_cm:.2f} cm, Clasificación: {clasificacion_tamaño}")
+
+                #Aquí se añadirán los condicionales de si es pequeño, mediano o grande sepa donde dirigir el tomate maduro en la cinta
+                # ---><---
             else:
                 print("No se pudo detectar el contorno para analizar el tamaño.")
 
-        elif "TomatesVerdes" in color_label:
-            print(f"Se detecta un tomate verde ({color_label}), se envía a Granel.")
-        elif "TomatesAmarillos" in color_label:
-            print(f"Se detecta un tomate amarillo ({color_label}), se envía a Granel.")
+        elif "TomatesVerdes" in color_label or "TomatesAmarillos" in color_label:
+            print(f"Se detecta un tomate {color_label.lower()}, se envía a Granel.")
+
         elif "Papas" in color_label:
             print(f"Se detecta una papa sana({color_label}), se procederá a analizar su tamaño.")
             
@@ -80,6 +81,9 @@ try:
 
             if diametro_cm is not None:
                 print(f"El diámetro detectado es: {diametro_cm:.2f} cm, Clasificación: {clasificacion_tamaño}")
+
+                #Aquí se añadirán los condicionales de si es pequeño, mediano o grande sepa donde dirigir el tomate maduro en la cinta
+                # ---><---
             else:
                 print("No se pudo detectar el contorno para analizar el tamaño.")
 
