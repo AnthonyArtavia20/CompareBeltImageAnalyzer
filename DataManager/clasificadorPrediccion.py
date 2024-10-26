@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image, ImageOps
 
-def classify_image(interpreter, input_details, output_details, image):
+def classify_imagePredictor(interpreter, input_details, output_details, image):
     size = input_details[0]['shape'][1:3]
     image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
     image_array = np.asarray(image).astype(np.float32)
