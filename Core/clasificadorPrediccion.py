@@ -1,3 +1,6 @@
+#Este archivo separa la lógica de utilización de la cámara. Encargado de utilizarla como medio para tomar una foto
+#posteriormente analizarla según los modelos.
+
 import numpy as np
 from PIL import Image, ImageOps
 

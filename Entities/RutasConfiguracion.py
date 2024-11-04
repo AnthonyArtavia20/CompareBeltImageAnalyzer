@@ -1,3 +1,4 @@
+#Este archivo permite configurar fácilmente las rutas hacía diversos archivos dentro del programa.
 import os
 
 # Establecer la ruta base actual (debería incluir 'CodigoCompareBelt')

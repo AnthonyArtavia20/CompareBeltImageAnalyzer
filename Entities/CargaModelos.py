@@ -1,5 +1,8 @@
 import tensorflow as tf
 
+#Este archivo se encarga de poder cargar tanto los modelos como las etiquetas, para que el "Core" pueda utilizarlos
+#para comparar y clasificar.
+
 def cargar_modelo(model_path):
     interpreter = tf.lite.Interpreter(model_path=model_path)
     interpreter.allocate_tensors()
