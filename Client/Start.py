@@ -1,15 +1,13 @@
 # Punto de partida desde donde se inicia el programa
-
 import os
 import sys
 
 # Obtener la ruta del directorio raíz del proyecto
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-core_path = os.path.join(project_root, 'Core')
-sys.path.insert(0, core_path)  # Añade 'Core' al principio de sys.path
+sys.path.insert(0, project_root)  # Añade el directorio raíz al principio de sys.path
 
 # Importar y ejecutar el script principal
-from CompareBeltStartUp import main
+from Core.CompareBeltStartUp import main
 
-# Llamar a la función principal
+# Llamar a la función principal con el propósito de iniciar el programa
 main()
