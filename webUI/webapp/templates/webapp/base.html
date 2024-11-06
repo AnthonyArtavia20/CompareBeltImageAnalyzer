@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <title>{% block title %}Sistema de Clasificación de Frutas{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'webapp/css/style.css' %}">
+</head>
+<body>
+    <!-- Theme Switch Button -->
+    <div class="theme-switch">
+        <button class="btn btn-outline-secondary" id="themeToggle">
+            <i class="bi bi-moon-fill" id="themeIcon"></i>
+            <span id="themeText">Modo Claro</span>
+        </button>
+    </div>
+
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            const html = document.documentElement;
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.setAttribute('data-bs-theme', 'dark');
+                    themeIcon.classList.remove('bi-sun-fill');
+                    themeIcon.classList.add('bi-moon-fill');
+                    themeText.textContent = 'Modo Claro';
+                } else {
+                    html.setAttribute('data-bs-theme', 'light');
+                    themeIcon.classList.remove('bi-moon-fill');
+                    themeIcon.classList.add('bi-sun-fill');
+                    themeText.textContent = 'Modo Oscuro';
+                }
+            }
+
+            // Set initial theme (dark by default)
+            setTheme(true);
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = html.getAttribute('data-bs-theme') === 'dark';
+                setTheme(!isDark);
+            });
+        });
+    </script>
+</body>
+</html>

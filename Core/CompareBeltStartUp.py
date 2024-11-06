@@ -2,12 +2,14 @@ import serial
 import time
 import sys
 import os
+import json
 from Entities.RutasConfiguracion import (
     defects_model_path,
     color_model_path,
     captured_image_path,
     defect_labels_path,
-    color_labels_path
+    color_labels_path,
+    contadores_path
 )
 from Entities.CargaModelos import cargar_etiquetas, cargar_modelo
 from ImageAnalysis.CapturaImagen import capture_image
@@ -27,6 +29,7 @@ def main():
 
     # Puerto serial en escucha para el infra rojo.
     ser = serial.Serial('COM9', 9600)  # Aquí el puerto se puede cambiar a conveniencia, frecuencia no se toca.
+    sensor_active = False
 
     # Agregar la ruta base al PYTHONPATH
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -43,9 +46,15 @@ def main():
     while True:
         if ser.in_waiting > 0:  # Verifica si hay datos disponibles en el puerto serial
             line = ser.readline().decode('utf-8').strip()
-            if line == "DETECTADO":  # Si la señal indica movimiento detectado
-                print("Movimiento detectado, capturando imagen...")
-                capture_image(captured_image_path)  # Capturar la imagen
+
+            if line == "DETECTADO" and not sensor_active:  # Si la señal indica movimiento detectado
+                sensor_active = True
+                print("Movimiento detectado. Esperando 2 segundos antes de capturar la imagen...")
+                time.sleep(2)  # Esperar 2 segundos
+                
+                # Capturar imagen
+                print("Capturando imagen...")
+                capture_image(captured_image_path)
 
                 try:
                     image = Image.open(captured_image_path).convert("RGB")
@@ -68,6 +77,10 @@ def main():
                 except Exception as e:
                     print(f"Ocurrió un error: {e}")
 
+                print("Esperando 5 segundos antes de volver a detectar...")
+                time.sleep(5)  # Tiempo de espera tras el procesamiento
+                sensor_active = False
+
         time.sleep(0.1)  # Pausa breve para no saturar la CPU
 
 def manejar_objeto_defectuoso(defect_label):
@@ -75,6 +88,7 @@ def manejar_objeto_defectuoso(defect_label):
     print(f"Objeto defectuoso detectado: {defect_label}")
     contador_defectuosos += 1
     print("Cantidad de objetos defectuosos: ", contador_defectuosos)
+    contadoresAjson()
 
 def procesar_color_y_clasificar(image, color_interpreter, input_details, output_details, color_labels):
     global contador_papasTomates_Grades, contador_papasTomates_medianos, contador_papasTomates_pequeñas, contador_granel
@@ -84,9 +98,10 @@ def procesar_color_y_clasificar(image, color_interpreter, input_details, output_
     print(f"Se ha detectado un objeto sano, Confidence: {color_confidence}")
     print("Se procede a clasificar el objeto...")
 
-    # Lógica de clasificación según el color y tamaño (similar a la original)
-    if "TomatesRojos(Maduros)" in color_label:
-        print(f"Se detecta un tomate maduro ({color_label}), se procesará por tamaño...")
+    # Lógica de clasificación según el color y tamaño
+    if "TomatesRojos(Maduros)" in color_label or "Papas" in color_label:
+
+        print(f"Se detecta un/una ({color_label}), se procesará por tamaño...")
         analizador = AnalizadorTamano(image)
         clasificacion_tamaño, diametro_cm = analizador.analizar()
 
@@ -95,18 +110,36 @@ def procesar_color_y_clasificar(image, color_interpreter, input_details, output_
             if clasificacion_tamaño == "Grande":
                 contador_papasTomates_Grades += 1
                 print("Cantidad de objetos en caja de grandes: ", contador_papasTomates_Grades)
+                contadoresAjson()
             elif clasificacion_tamaño == "Mediano":
                 contador_papasTomates_medianos += 1
                 print("Cantidad de objetos en caja de mediados: ", contador_papasTomates_medianos)
+                contadoresAjson()
             elif clasificacion_tamaño == "Pequeño":
                 contador_papasTomates_pequeñas += 1
                 print("Cantidad de objetos en caja de pequeños: ", contador_papasTomates_pequeñas)
+                contadoresAjson()
         else:
             print("No se pudo detectar el contorno para analizar el tamaño.")
     elif "TomatesVerdes" in color_label or "TomatesAmarillos" in color_label:
         print(f"Se detecta un tomate {color_label.lower()}, se envía a Granel.")
         contador_granel += 1
         print("Cantidad de objetos en la caja granel: ", contador_granel)
+        contadoresAjson()
+
+def contadoresAjson():
+    # Envia los contadores a un archivo json
+    with open(contadores_path, "w") as file:
+        data = {
+            "contadores": [
+                {"nombre": "Tomates Grandes", "cantidad": contador_papasTomates_Grades},
+                {"nombre": "Tomates Medianos", "cantidad": contador_papasTomates_medianos},
+                {"nombre": "Tomates Pequeños", "cantidad": contador_papasTomates_pequeñas},
+                {"nombre": "Tomates Granel", "cantidad": contador_granel},
+                {"nombre": "Tomates Defectuosos", "cantidad": contador_defectuosos}
+            ]
+        }
+        json.dump(data, file, indent=4)
 
 if __name__ == "__main__":
     main()

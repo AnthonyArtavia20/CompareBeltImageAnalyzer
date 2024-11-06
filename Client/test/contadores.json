@@ -1,0 +1,24 @@
+{
+    "contadores": [
+        {
+            "nombre": "Tomates Grandes",
+            "cantidad": 0
+        },
+        {
+            "nombre": "Tomates Medianos",
+            "cantidad": 0
+        },
+        {
+            "nombre": "Tomates Peque\u00f1os",
+            "cantidad": 1
+        },
+        {
+            "nombre": "Tomates Granel",
+            "cantidad": 1
+        },
+        {
+            "nombre": "Tomates Defectuosos",
+            "cantidad": 0
+        }
+    ]
+}
