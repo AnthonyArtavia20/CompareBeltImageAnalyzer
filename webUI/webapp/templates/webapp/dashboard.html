@@ -26,20 +26,16 @@
     </div>
 
     <!-- Contenedores de clasificación -->
-    <div class="row box-container">
+    <div class="box-container">
         {% for box_id, box in boxes_data.items %}
-            <div class="col">
-                <div class="sorting-box">
-                    <h4>{{ box.name }}</h4>
-                    <p>Cantidad actual: <span id="{{ box_id }}-count">{{ box.count }}</span></p>
-                    <p>Estado: <span class="badge bg-success">Activo</span></p>
-                </div>
+            <div class="sorting-box">
+                <h4>{{ box.name }}</h4>
+                <p>Cantidad actual: <span id="{{ box_id }}-count">{{ box.count }}</span></p>
+                <p>Estado: <span class="badge bg-success">Activo</span></p>
             </div>
         {% empty %}
-            <div class="col-12">
-                <div class="alert alert-warning">
-                    No hay datos de clasificación disponibles
-                </div>
+            <div class="alert alert-warning">
+                No hay datos de clasificación disponibles
             </div>
         {% endfor %}
     </div>

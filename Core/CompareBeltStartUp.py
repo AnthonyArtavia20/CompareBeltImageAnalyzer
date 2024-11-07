@@ -132,11 +132,11 @@ def contadoresAjson():
     with open(contadores_path, "w") as file:
         data = {
             "contadores": [
-                {"nombre": "Tomates Grandes", "cantidad": contador_papasTomates_Grades},
-                {"nombre": "Tomates Medianos", "cantidad": contador_papasTomates_medianos},
-                {"nombre": "Tomates Pequeños", "cantidad": contador_papasTomates_pequeñas},
-                {"nombre": "Tomates Granel", "cantidad": contador_granel},
-                {"nombre": "Tomates Defectuosos", "cantidad": contador_defectuosos}
+                {"nombre": "Grandes", "cantidad": contador_papasTomates_Grades},
+                {"nombre": "Medianos", "cantidad": contador_papasTomates_medianos},
+                {"nombre": "Pequeños", "cantidad": contador_papasTomates_pequeñas},
+                {"nombre": "Granel", "cantidad": contador_granel},
+                {"nombre": "Defectuosos", "cantidad": contador_defectuosos}
             ]
         }
         json.dump(data, file, indent=4)
