@@ -14,11 +14,11 @@
         },
         {
             "nombre": "Tomates Granel",
-            "cantidad": 1
+            "cantidad": 2
         },
         {
             "nombre": "Tomates Defectuosos",
-            "cantidad": 0
+            "cantidad": 14
         }
     ]
 }
