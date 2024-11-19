@@ -1,0 +1,92 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block content %}
+<div class="text-center">
+    <h1>Sistema de Clasificación de Frutas</h1>
+    
+    <!-- System Status -->
+    <div class="alert {% if system_status == 'activo' %}alert-success{% else %}alert-danger{% endif %} mb-4">
+        Estado del Sistema: {{ system_status|title }}
+    </div>
+    
+    <!-- Botón de encendido -->
+    <button class="btn btn-lg btn-custom-danger power-button" id="powerButton">
+        <i class="bi bi-power"></i> Encendido
+    </button>
+
+    <!-- Sección de la cámara -->
+    <div class="camera-section">
+        <h3>Detector con Cámara para Análisis</h3>
+        <div class="camera-container">
+            <img src="{% static captured_image_path %}" 
+                alt="Cámara" 
+                class="img-fluid camera-feed" 
+                id="cameraFeed">
+        </div>
+    </div>
+
+    <!-- Contenedores de clasificación -->
+    <div class="row box-container">
+        {% for box_id, box in boxes_data.items %}
+            <div class="col">
+                <div class="sorting-box">
+                    <h4>{{ box.name }}</h4>
+                    <p>Cantidad actual: <span id="{{ box_id }}-count">{{ box.count }}</span></p>
+                    <p>Estado: <span class="badge bg-success">Activo</span></p>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    No hay datos de clasificación disponibles
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function updateCounters() {
+        fetch('/get-counters/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.contadores) {
+                    data.contadores.forEach((counter, index) => {
+                        const boxId = `box${index + 1}-count`;
+                        const element = document.getElementById(boxId);
+                        if (element) {
+                            element.textContent = counter.cantidad;
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error actualizando contadores:', error);
+            });
+    }
+
+    function updateImage() {
+        const cameraFeed = document.getElementById('cameraFeed');
+        const timestamp = new Date().getTime();
+        fetch(`/check-image-exists/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    cameraFeed.src = `/media/captured_image.jpg?t=${timestamp}`;
+                } else {
+                    cameraFeed.src = "{% static 'webapp/images/logo.png' %}";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking image:', error);
+                cameraFeed.src = "{% static 'webapp/images/logo.png' %}";
+            });
+    }
+
+    // Update image and counters every second
+    setInterval(() => {
+        updateImage();
+        updateCounters();
+    }, 1000);
+</script>
+{% endblock %}

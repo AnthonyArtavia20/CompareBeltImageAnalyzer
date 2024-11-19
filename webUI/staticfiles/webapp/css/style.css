@@ -1,0 +1,86 @@
+:root {
+    --custom-primary: #4CAF50;
+    --custom-secondary: #2196F3;
+    --custom-danger: #481587;
+    --custom-success: #8BC34A;
+}
+
+.box-container {
+    margin-top: 50px;
+}
+
+.sorting-box {
+    border: 2px solid #666;
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.camera-section {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.power-button {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.theme-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* Custom button classes */
+.btn-custom-primary {
+    background-color: var(--custom-primary);
+    border-color: var(--custom-primary);
+    color: white;
+}
+
+.btn-custom-primary:hover {
+    background-color: #43A047;
+    border-color: #43A047;
+    color: white;
+}
+
+.btn-custom-danger {
+    background-color: var(--custom-danger);
+    border-color: var(--custom-danger);
+    color: white;
+}
+
+.btn-custom-danger:hover {
+    background-color: #B90518;
+    border-color: #B90518;
+    color: white;
+}
+
+.badge-custom-success {
+    background-color: var(--custom-success) !important;
+    color: white;
+}
+
+/* Dark mode styles */
+[data-bs-theme="dark"] .sorting-box {
+    background-color: #2b3035;
+    border-color: #495057;
+}
+
+[data-bs-theme="dark"] .camera-section {
+    background-color: #2b3035;
+}
+
+/* Light mode styles */
+[data-bs-theme="light"] .sorting-box {
+    background-color: #ffffff;
+    border-color: #dee2e6;
+}
+
+[data-bs-theme="light"] .camera-section {
+    background-color: #f8f9fa;
+}

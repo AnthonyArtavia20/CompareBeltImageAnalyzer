@@ -1,0 +1,121 @@
+:root {
+    --custom-primary: #4CAF50;
+    --custom-secondary: #2196F3;
+    --custom-danger: #B90518;
+    --custom-success: #8BC34A;
+}
+
+.box-container {
+    margin-top: 50px;
+}
+
+.sorting-box {
+    border: 2px solid #666;
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.camera-section {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    /* Add fixed width to prevent layout shifts */
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.power-button {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.theme-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* Custom button classes */
+.btn-custom-primary {
+    background-color: var(--custom-primary);
+    border-color: var(--custom-primary);
+    color: white;
+}
+
+.btn-custom-primary:hover {
+    background-color: #43A047;
+    border-color: #43A047;
+    color: white;
+}
+
+.btn-custom-danger {
+    background-color: var(--custom-danger);
+    border-color: var(--custom-danger);
+    color: white;
+}
+
+.btn-custom-danger:hover {
+    background-color: #9f0514;
+    border-color: #9f0514;
+    color: white;
+}
+
+.badge-custom-success {
+    background-color: var(--custom-success) !important;
+    color: white;
+}
+
+.table pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    border-radius: 4px;
+    margin: 0;
+}
+
+.table code {
+    color: inherit;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: var(--custom-primary);
+    color: white;
+}
+
+.table th {
+    width: 200px;
+}
+
+.camera-container {
+    /* Use aspect-ratio to maintain dimensions while loading */
+    aspect-ratio: 4/3;
+    width: 100%;
+    position: relative;
+    border: 2px solid var(--custom-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+}
+
+.camera-feed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.loading {
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}

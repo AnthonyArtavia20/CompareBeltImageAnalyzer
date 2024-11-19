@@ -18,3 +18,6 @@ color_model_path = os.path.join(base_path, "Models", "ModelosDetectores", "color
 # Nuevas rutas para los archivos de etiquetas
 defect_labels_path = os.path.join(base_path, "Models", "labelsDetectores", "labelsDefectosModel.txt")
 color_labels_path = os.path.join(base_path, "Models", "labelsDetectores", "labelsColorModel.txt")
+
+#Nueva ruta para el archivo json de contadores
+contadores_path = os.path.join(base_path, "Client", "test", "contadores.json")
