@@ -10,7 +10,7 @@
         },
         {
             "nombre": "Tomates Peque\u00f1os",
-            "cantidad": 0
+            "cantidad": 2
         },
         {
             "nombre": "Tomates Granel",
@@ -18,7 +18,7 @@
         },
         {
             "nombre": "Tomates Defectuosos",
-            "cantidad": 14
+            "cantidad": 10
         }
     ]
 }
