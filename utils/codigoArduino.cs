@@ -5,36 +5,39 @@ const int infraredSensorPin = 13;
 int lastState = HIGH; // Estado inicial del sensor
 bool sensorEnabled = true; // Controla si el sensor está activo
 
-// Configuración de los servomotores>
-const int SERVO_STOP = 90;   // Detener el servo (punto neutral)
-const int SERVO_FORWARD = 0; // Velocidad máxima hacia adelante
+// Configuración de los servomotores
+const int SERVO_STOP = 90;      // Detener el servo (punto neutral)
+const int SERVO_FORWARD = 0;    // Velocidad máxima hacia adelante (horaria)
+const int SERVO_BACKWARD = 180; // Velocidad máxima hacia atrás (antihoraria)
 const int ANGULOEMPUJE = 45;
 const int ANGULODESCANSO = 0;
 
-//Servos de la cinta
-Servo servoCinta1;
+// Servos de la cinta
+Servo servoCinta1; // Siempre conectado
 Servo servoCinta2;
 
-//Servos separadores
+// Servos separadores
 Servo separadorGrandes;
 Servo separadorMedianos;
 Servo separadorPequenos;
 Servo separadorGranel;
 Servo separadorDefectuosos;
 
-void setup() { //Inicializaciones
+void setup() {
   Serial.begin(9600);
 
   pinMode(infraredSensorPin, INPUT);
-  servoCinta1.attach(2); //Servo1 de la cinta en el pin 2
-  servoCinta2.attach(3); //Servo2 de la cinta en el pin 3
 
+  // Conecta y configura los servos inicialmente
+  servoCinta1.attach(2); // Mantener siempre conectado
+  servoCinta2.attach(4);
   separadorGrandes.attach(4);
   separadorMedianos.attach(5);
   separadorPequenos.attach(6);
   separadorGranel.attach(7);
   separadorDefectuosos.attach(8);
 
+  // Inicializa todos los servos en posición neutra
   servoCinta1.write(SERVO_STOP);
   servoCinta2.write(SERVO_STOP);
   separadorGrandes.write(ANGULODESCANSO);
@@ -43,10 +46,18 @@ void setup() { //Inicializaciones
   separadorGranel.write(ANGULODESCANSO);
   separadorDefectuosos.write(ANGULODESCANSO);
 
+  // Desconecta los servos no utilizados después de configurarlos
+  servoCinta2.detach();
+  separadorGrandes.detach();
+  separadorMedianos.detach();
+  separadorPequenos.detach();
+  separadorGranel.detach();
+  separadorDefectuosos.detach();
+
   Serial.println("Arduino listo.");
 }
 
-void loop() { //Bucle principal donde se ejecutan las llamadas a las funciones y los servos.
+void loop() {
   if (sensorEnabled) {
     int currentState = digitalRead(infraredSensorPin);
 
@@ -58,29 +69,29 @@ void loop() { //Bucle principal donde se ejecutan las llamadas a las funciones y
     lastState = currentState;
   }
 
-  while (Serial.available()>0) {
+  while (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
     command.trim();
     Serial.println("Comando recibido: " + command); // Depuración
 
-    if (command == "CAJA_GRANDES"){
-      moverServosCinta(2000);
+    if (command == "CAJA_GRANDES") {
+      moverServosCinta(2000, SERVO_BACKWARD);
       delay(2000);
       moverSeparadores("Grandes");
     } else if (command == "CAJA_MEDIANOS") {
-      moverServosCinta(4000);
+      moverServosCinta(4000, SERVO_BACKWARD);
       delay(4000);
       moverSeparadores("Medianos");
     } else if (command == "CAJA_PEQUE") {
-      moverServosCinta(6000);
+      moverServosCinta(6000, SERVO_BACKWARD);
       delay(6000);
-      moverSeparadores("Pequeños");
+      moverSeparadores("Pequenos");
     } else if (command == "SERVO_GRANEL_ON") {
-      moverServosCinta(8000);
+      moverServosCinta(8000, SERVO_BACKWARD);
       delay(8000);
       moverSeparadores("Granel");
     } else if (command == "DEFECTUOSO") {
-      moverServosCinta(10000);
+      moverServosCinta(10000, SERVO_BACKWARD);
       delay(10000);
       moverSeparadores("Defectuosos");
     } else if (command == "ENCENDER") {
@@ -92,37 +103,56 @@ void loop() { //Bucle principal donde se ejecutan las llamadas a las funciones y
   }
 }
 
-void moverServosCinta(int tiempoMovimiento) { //Para mover los servos dedicados a la cinta.
-  servoCinta1.write(SERVO_FORWARD);
-  servoCinta2.write(SERVO_FORWARD);
+void moverServosCinta(int tiempoMovimiento, int direccion) {
+  // Mantén servoCinta1 siempre conectado
+  servoCinta1.write(direccion);
+
+  // Conecta el servoCinta2 temporalmente
+  servoCinta2.attach(4);
+  delay(10); // Pequeño retraso para estabilizar el servo
+
+  servoCinta2.write(direccion);
   delay(tiempoMovimiento);
+
   servoCinta1.write(SERVO_STOP);
   servoCinta2.write(SERVO_STOP);
+
+  // Desconecta el servoCinta2 después del movimiento
+  servoCinta2.detach();
+
   Serial.println("COMPLETADO");
 }
 
-void moverSeparadores(String servoSeparador){ //Servos de las columnas
-  //Definimos una variable constante que permitirá indiar cual servo mover.
+void moverSeparadores(String servoSeparador) {
   Servo *servoSeleccionado = nullptr;
 
-  if (servoSeparador == "Grandes"){
+  if (servoSeparador == "Grandes") {
+    separadorGrandes.attach(4);
     servoSeleccionado = &separadorGrandes;
-  } else if (servoSeparador == "Medianos"){
+  } else if (servoSeparador == "Medianos") {
+    separadorMedianos.attach(5);
     servoSeleccionado = &separadorMedianos;
-  } else if (servoSeparador == "Pequenos"){
+  } else if (servoSeparador == "Pequenos") {
+    separadorPequenos.attach(6);
     servoSeleccionado = &separadorPequenos;
-  } else if (servoSeparador == "Granel"){
+  } else if (servoSeparador == "Granel") {
+    separadorGranel.attach(7);
     servoSeleccionado = &separadorGranel;
-  } else if (servoSeparador == "Defectuosos"){
+  } else if (servoSeparador == "Defectuosos") {
+    separadorDefectuosos.attach(8);
     servoSeleccionado = &separadorDefectuosos;
   } else {
     return;
   }
 
-  //Mueve el servo seleccionado y almacenado en la variable:
-  servoSeleccionado->write(ANGULOEMPUJE); //Empujar
-  delay(1000); //Se espera a que se termina de ejecutar el movimiento de empujar
-  servoSeleccionado->write(ANGULODESCANSO); //Se vuelve al estado de descanso.
+  delay(10); // Pequeño retraso después de conectar el servo
+  servoSeleccionado->write(ANGULOEMPUJE); // Empujar
+  delay(1000);
+  servoSeleccionado->write(ANGULODESCANSO); // Volver al estado de descanso
+
+  // Desconecta el servo después de moverlo
+  servoSeleccionado->detach();
+
   Serial.print("Separador movido: ");
   Serial.println(servoSeparador);
 }
