@@ -30,8 +30,8 @@ class AnalizadorTamano:
             return None
 
     def clasificar_por_diametro(self, diametro):
-        UMBRAL_PEQUEÑO = 71  # Umbral en cm
-        UMBRAL_MEDIANO = 120  # Umbral en cm
+        UMBRAL_PEQUEÑO = 7  # Umbral en cm
+        UMBRAL_MEDIANO = 10  # Umbral en cm
 
         if diametro is not None:
             diametro_cm = diametro / self.FACTOR_CONVERSION

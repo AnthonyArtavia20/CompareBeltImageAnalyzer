@@ -9,8 +9,8 @@ bool sensorEnabled = true; // Controla si el sensor está activo
 const int SERVO_STOP = 90;      // Detener el servo (punto neutral)
 const int SERVO_FORWARD = 0;    // Velocidad máxima hacia adelante (horaria)
 const int SERVO_BACKWARD = 180; // Velocidad máxima hacia atrás (antihoraria)
-const int ANGULOEMPUJE = 45;
-const int ANGULODESCANSO = 0;
+const int ANGULOEMPUJE = 45;    // Ángulo de empuje de los separadores
+const int ANGULODESCANSO = 0;   // Ángulo de descanso de los separadores
 
 // Servos de la cinta
 Servo servoCinta1; // Siempre conectado
@@ -31,13 +31,13 @@ void setup() {
   // Conecta y configura los servos inicialmente
   servoCinta1.attach(2); // Mantener siempre conectado
   servoCinta2.attach(4);
-  separadorGrandes.attach(4);
-  separadorMedianos.attach(5);
-  separadorPequenos.attach(6);
-  separadorGranel.attach(7);
-  separadorDefectuosos.attach(8);
+  separadorGrandes.attach(6);
+  separadorMedianos.attach(7);
+  separadorPequenos.attach(8);
+  separadorGranel.attach(9);
+  separadorDefectuosos.attach(10);
 
-  // Inicializa todos los servos en posición neutra
+  // Inicializa todos los servos en posición de descanso
   servoCinta1.write(SERVO_STOP);
   servoCinta2.write(SERVO_STOP);
   separadorGrandes.write(ANGULODESCANSO);
@@ -54,7 +54,7 @@ void setup() {
   separadorGranel.detach();
   separadorDefectuosos.detach();
 
-  Serial.println("Arduino listo.");
+  Serial.println("Arduino listo. Todos los separadores en posición inicial.");
 }
 
 void loop() {
@@ -76,23 +76,18 @@ void loop() {
 
     if (command == "CAJA_GRANDES") {
       moverServosCinta(2000, SERVO_BACKWARD);
-      delay(2000);
       moverSeparadores("Grandes");
     } else if (command == "CAJA_MEDIANOS") {
       moverServosCinta(4000, SERVO_BACKWARD);
-      delay(4000);
       moverSeparadores("Medianos");
     } else if (command == "CAJA_PEQUE") {
       moverServosCinta(6000, SERVO_BACKWARD);
-      delay(6000);
       moverSeparadores("Pequenos");
     } else if (command == "SERVO_GRANEL_ON") {
       moverServosCinta(8000, SERVO_BACKWARD);
-      delay(8000);
       moverSeparadores("Granel");
     } else if (command == "DEFECTUOSO") {
       moverServosCinta(10000, SERVO_BACKWARD);
-      delay(10000);
       moverSeparadores("Defectuosos");
     } else if (command == "ENCENDER") {
       sensorEnabled = true;
@@ -120,39 +115,46 @@ void moverServosCinta(int tiempoMovimiento, int direccion) {
   // Desconecta el servoCinta2 después del movimiento
   servoCinta2.detach();
 
-  Serial.println("COMPLETADO");
+  Serial.println("Movimiento de cinta completado.");
 }
 
 void moverSeparadores(String servoSeparador) {
   Servo *servoSeleccionado = nullptr;
 
+  // Seleccionar el servo correspondiente
   if (servoSeparador == "Grandes") {
-    separadorGrandes.attach(4);
+    separadorGrandes.attach(6);
     servoSeleccionado = &separadorGrandes;
   } else if (servoSeparador == "Medianos") {
-    separadorMedianos.attach(5);
+    separadorMedianos.attach(7);
     servoSeleccionado = &separadorMedianos;
   } else if (servoSeparador == "Pequenos") {
-    separadorPequenos.attach(6);
+    separadorPequenos.attach(8);
     servoSeleccionado = &separadorPequenos;
   } else if (servoSeparador == "Granel") {
-    separadorGranel.attach(7);
+    separadorGranel.attach(9);
     servoSeleccionado = &separadorGranel;
   } else if (servoSeparador == "Defectuosos") {
-    separadorDefectuosos.attach(8);
+    separadorDefectuosos.attach(10);
     servoSeleccionado = &separadorDefectuosos;
   } else {
     return;
   }
 
+  // Realizar el movimiento
   delay(10); // Pequeño retraso después de conectar el servo
-  servoSeleccionado->write(ANGULOEMPUJE); // Empujar
-  delay(1000);
-  servoSeleccionado->write(ANGULODESCANSO); // Volver al estado de descanso
+  servoSeleccionado->write(ANGULOEMPUJE); // Golpear
+  delay(3000); // Mantener en la posición de golpe por 3 segundos
+  Serial.println("Moviendo a posición de descanso...");
+  servoSeleccionado->write(ANGULODESCANSO); // Volver a la posición de descanso
+  delay(500); // Esperar para garantizar que el movimiento se complete
 
-  // Desconecta el servo después de moverlo
+  // Mantener el servo conectado un poco más para asegurar que mantiene su posición
+  delay(500);
+
+  // Desconectar el servo después del movimiento
   servoSeleccionado->detach();
 
-  Serial.print("Separador movido: ");
+  Serial.print("Separador golpeado y vuelto a posición original: ");
   Serial.println(servoSeparador);
 }
