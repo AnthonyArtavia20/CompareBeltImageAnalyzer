@@ -75,19 +75,19 @@ void loop() {
     Serial.println("Comando recibido: " + command); // Depuración
 
     if (command == "CAJA_GRANDES") {
-      moverServosCinta(2000, SERVO_BACKWARD);
+      moverServosCinta(1500, SERVO_BACKWARD);
       moverSeparadores("Grandes");
     } else if (command == "CAJA_MEDIANOS") {
-      moverServosCinta(4000, SERVO_BACKWARD);
+      moverServosCinta(3000, SERVO_BACKWARD);
       moverSeparadores("Medianos");
     } else if (command == "CAJA_PEQUE") {
-      moverServosCinta(6000, SERVO_BACKWARD);
+      moverServosCinta(3500, SERVO_BACKWARD);
       moverSeparadores("Pequenos");
     } else if (command == "SERVO_GRANEL_ON") {
-      moverServosCinta(8000, SERVO_BACKWARD);
+      moverServosCinta(7500, SERVO_BACKWARD);
       moverSeparadores("Granel");
     } else if (command == "DEFECTUOSO") {
-      moverServosCinta(10000, SERVO_BACKWARD);
+      moverServosCinta(8000, SERVO_BACKWARD);
       moverSeparadores("Defectuosos");
     } else if (command == "ENCENDER") {
       sensorEnabled = true;
@@ -99,20 +99,24 @@ void loop() {
 }
 
 void moverServosCinta(int tiempoMovimiento, int direccion) {
-  // Mantén servoCinta1 siempre conectado
-  servoCinta1.write(direccion);
-
-  // Conecta el servoCinta2 temporalmente
+  
+  //Conectar los servos temporalmente
+  servoCinta1.attach(2);
   servoCinta2.attach(4);
-  delay(10); // Pequeño retraso para estabilizar el servo
 
+  delay(10); // Pequeño retraso para estabilizar los servos
+
+  //Mover Ambos servos
+  servoCinta1.write(direccion);
   servoCinta2.write(direccion);
   delay(tiempoMovimiento);
 
+  //Detener ambos servos
   servoCinta1.write(SERVO_STOP);
   servoCinta2.write(SERVO_STOP);
 
   // Desconecta el servoCinta2 después del movimiento
+  servoCinta1.detach();
   servoCinta2.detach();
 
   Serial.println("Movimiento de cinta completado.");

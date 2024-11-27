@@ -89,7 +89,7 @@ def main():
 
         time.sleep(0.1)
 
-def manejar_objeto_defectuoso(defect_label, ser):
+def manejar_objeto_defectuoso(defect_label, ser): #Función encargada de procesar los objetos
     global contador_defectuosos
     print(f"Objeto defectuoso detectado: {defect_label}")
     ser.write(b"DEFECTUOSO\n")
@@ -101,12 +101,14 @@ def manejar_objeto_defectuoso(defect_label, ser):
 
 def procesar_color_y_clasificar(image, color_interpreter, input_details, output_details, color_labels, ser):
     global contador_papasTomates_Grades, contador_papasTomates_medianos, contador_papasTomates_pequeñas, contador_granel
-
+    
+    #carga de modelos
     color_index, color_confidence = classify_imagePredictor(color_interpreter, input_details, output_details, image)
     color_label = color_labels[color_index]
     print(f"Se ha detectado un objeto sano, Confidence: {color_confidence}")
     print("Se procede a clasificar el objeto...")
 
+    #Filtrado del objeto en base al modelo
     if "TomatesRojos(Maduros)" in color_label or "Papas" in color_label:
         print(f"Se detecta un/una ({color_label}), se procesará por tamaño...")
         analizador = AnalizadorTamano(image)

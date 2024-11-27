@@ -8,11 +8,6 @@
     <div class="alert {% if system_status == 'activo' %}alert-success{% else %}alert-danger{% endif %} mb-4">
         Estado del Sistema: {{ system_status|title }}
     </div>
-    
-    <!-- Botón de encendido -->
-    <button class="btn btn-lg btn-custom-danger power-button" id="powerButton">
-        <i class="bi bi-power"></i> Encendido
-    </button>
 
     <!-- Sección de la cámara -->
     <div class="camera-section">
